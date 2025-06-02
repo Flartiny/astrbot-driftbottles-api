@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  fastapi-api:
+    image: flartiny/astrbot-driftbottles-api:latest
+    container_name: fastapi-drift-api
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=${YOUR_MONGO_URI}
+      - DATABASE_NAME=${YOUR_DATABASE_NAME}
+      - COLLECTION_NAME=${YOUR_COLLECTION_NAME}
+    restart: always
