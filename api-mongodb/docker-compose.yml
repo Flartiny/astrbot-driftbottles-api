@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  fastapi-api:
+    image: flartiny/astrbot-driftbottles-api:latest
+    container_name: fastapi-drift-api
+    ports:
+      - "8000:8000"
+    environment:
+      # 使用'bottlefinder'及其'password'进行连接,对应init-mongo.js中的设置即可
+      - MONGO_URI=mongodb://bottlefinder:password@mongodb:27017/DriftBottles?authSource=DriftBottles
+      - DATABASE_NAME=DriftBottles # YOUR_DATABASE_NAME
+      - COLLECTION_NAME=Bottles    # YOUR_COLLECTION_NAME
+    depends_on:
+      - mongodb
+    restart: always
+
+  mongodb:
+    image: mongo:8.0.9
+    container_name: local-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin     # 可修改为自定义管理员用户名,用于连接
+      - MONGO_INITDB_ROOT_PASSWORD=adminPassword  # 可修改为自定义管理员密码,用于连接
+    volumes:
+      - mongo-data:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    ports:
+      - "27017:27017"
+    restart: always
+
+# 3. 定义数据卷
+volumes:
+  mongo-data:

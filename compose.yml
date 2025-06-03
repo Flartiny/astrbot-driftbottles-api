@@ -8,6 +8,6 @@ services:
       - "8000:8000"
     environment:
       - MONGO_URI=${YOUR_MONGO_URI}
-      - DATABASE_NAME=${YOUR_DATABASE_NAME}
-      - COLLECTION_NAME=${YOUR_COLLECTION_NAME}
+      - DATABASE_NAME=${YOUR_DATABASE_NAME}       # DriftBottles
+      - COLLECTION_NAME=${YOUR_COLLECTION_NAME}   # Bottles
     restart: always
