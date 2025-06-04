@@ -11,6 +11,7 @@ services:
       - MONGO_URI=mongodb://bottlefinder:password@mongodb:27017/DriftBottles?authSource=DriftBottles
       - DATABASE_NAME=DriftBottles # YOUR_DATABASE_NAME
       - COLLECTION_NAME=Bottles    # YOUR_COLLECTION_NAME
+      - TZ=Asia/Shanghai
     depends_on:
       - mongodb
     restart: always

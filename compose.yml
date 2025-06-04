@@ -10,4 +10,5 @@ services:
       - MONGO_URI=${YOUR_MONGO_URI}
       - DATABASE_NAME=${YOUR_DATABASE_NAME}       # DriftBottles
       - COLLECTION_NAME=${YOUR_COLLECTION_NAME}   # Bottles
+      - TZ=Asia/Shanghai
     restart: always
