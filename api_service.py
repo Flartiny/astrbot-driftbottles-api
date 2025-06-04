@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 # 使用 motor 进行异步 MongoDB 操作
 from motor.motor_asyncio import AsyncIOMotorClient as MongoClient
 from pymongo.server_api import ServerApi
+from pymongo import ReturnDocument
 from dotenv import load_dotenv
 import os
 from datetime import datetime
@@ -86,6 +87,20 @@ async def shutdown_db_client():
         client.close()
         print("Disconnected from MongoDB.")
 
+# 新增原子计数器函数
+async def get_next_sequence_value(sequence_name: str) -> int:
+    """
+    原子地获取并增加一个序列的值。
+    """
+    counters_collection = db["counters"]
+    sequence_document = await counters_collection.find_one_and_update(
+        {'_id': sequence_name},
+        {'$inc': {'seq': 1}},
+        upsert=True,
+        return_document=ReturnDocument.AFTER
+    )
+    return sequence_document['seq']
+
 @app.get("/", summary="根路径健康检查")
 async def read_root():
     return {"message": "Welcome to the Drift Bottle Core API!"}
@@ -103,12 +118,8 @@ async def add_bottle(bottle_in: BottleIn):
     try:
         bottle_data = bottle_in.dict()
         
-        # --- 此处的ID生成方式存在并发问题 ---
-        # 原始 `bottle_storage.py` 使用了 `collection.count_documents({}) + 1` 来生成 ID。
-        # 这种方式在并发高的情况下，可能导致多个请求生成相同的 ID。
-        # 1. 让 MongoDB 自动生成 _id（ObjectId），并在应用层使用字符串形式。
-        # 2. 使用一个独立的“计数器”集合来实现原子性递增ID。
-        new_id = await bottles_collection.count_documents({}) + 1
+        # 使用新的原子ID生成方式
+        new_id = await get_next_sequence_value("bottle_id")
         
         bottle_data.update({
             "bottle_id": new_id,
