@@ -14,7 +14,7 @@ db.createRole({
   privileges: [
     {
       resource: { db: 'DriftBottles', collection: 'Bottles' },
-      actions: ['find', 'insert', 'update', 'remove']
+      actions: ['find', 'insert', 'update']
     },
     {
       resource: { db: 'DriftBottles', collection: 'counters' },
