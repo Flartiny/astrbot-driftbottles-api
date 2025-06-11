@@ -42,6 +42,7 @@ class BottleIn(BaseModel):
     images: List[Image] = Field([], description="漂流瓶中的图片列表。")
     sender: str = Field(..., description="发送者昵称。")
     sender_id: str = Field(..., description="发送者唯一ID。")
+    poke: bool = Field(..., description="是否戳一戳。")
 
 class BottleOut(BaseModel):
     """漂流瓶的响应模型 (用于添加和捡起操作)。"""
