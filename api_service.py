@@ -53,6 +53,7 @@ class BottleOut(BaseModel):
     sender_id: str = Field(..., description="发送者唯一ID。")
     picked: bool = Field(..., description="该漂流瓶是否已被捡起（全局状态）。")
     timestamp: str = Field(..., description="漂流瓶创建的时间戳 (YYYY-MM-DD HH:MM:SS)。")
+    poke: bool = Field(..., description="是否戳一戳。")
 
     @classmethod
     def from_mongo_dict(cls, data: Dict[str, Any]) -> "BottleOut":
